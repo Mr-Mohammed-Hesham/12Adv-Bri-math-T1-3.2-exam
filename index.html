@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📐 المشتقة والنهايات - رياضيات 12 متقدم | Mr. Mohammed Hesham</title>
+<meta name="description" content="امتحان تفاعلي شامل عن المشتقة والنهايات - رياضيات الصف 12 المتقدم">
+<meta name="author" content="Mr. Mohammed Hesham">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body { font-family: 'Cairo', sans-serif; }
+body.en-mode { font-family: 'Inter', sans-serif; }
+.arabic-math { font-family: 'Amiri', 'Cairo', serif; }
+.correct { background-color: #dcfce7 !important; border-color: #16a34a !important; }
+.incorrect { background-color: #fee2e2 !important; border-color: #dc2626 !important; }
+.timer-warning { color: #dc2626 !important; animation: pulse 1s infinite; }
+@keyframes pulse { 50% { opacity: 0.7; } }
+@media print { .no-print { display: none !important; } }
+.success-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.875rem; }
+.grade-excellent { background: #dcfce7; color: #166534; }
+.grade-good { background: #fef3c7; color: #92400e; }
+.grade-pass { background: #dbeafe; color: #1e40af; }
+.grade-fail { background: #fee2e2; color: #991b1b; }
+.lang-switch {
+position: fixed; top: 16px; left: 16px; z-index: 100;
+background: white; padding: 6px; border-radius: 30px;
+box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: flex; gap: 4px;
+border: 2px solid #dc2626;
+}
+[dir="ltr"] .lang-switch { left: auto; right: 16px; }
+.lang-btn {
+padding: 6px 14px; border-radius: 20px; cursor: pointer; font-weight: bold;
+transition: all 0.3s; border: none; font-size: 0.875rem;
+background: transparent; color: #6b7280;
+}
+.lang-btn.active { background: #dc2626; color: white; box-shadow: 0 2px 6px rgba(220,38,38,0.4); }
+.lang-btn:hover:not(.active) { background: #fef2f2; color: #dc2626; }
+.shuffle-badge {
+display: inline-block;
+background: linear-gradient(135deg, #dc2626, #b91c1c);
+color: white; padding: 4px 12px; border-radius: 20px;
+font-size: 0.75rem; font-weight: bold; margin-right: 8px;
+}
+.math-display {
+display: inline-block; direction: ltr;
+font-family: 'Amiri', 'Times New Roman', serif;
+font-size: 1.2em; font-style: italic;
+padding: 2px 8px; background: #fef2f2;
+border-radius: 6px; margin: 2px;
+color: #b91c1c; font-weight: 600; letter-spacing: 0.5px;
+}
+.save-indicator {
+position: fixed; bottom: 20px; left: 20px; z-index: 200;
+background: #10b981; color: white; padding: 8px 16px;
+border-radius: 20px; font-size: 0.8rem; font-weight: bold;
+opacity: 0; transition: opacity 0.3s; pointer-events: none;
+box-shadow: 0 4px 12px rgba(16,185,129,0.4);
+}
+.save-indicator.show { opacity: 1; }
+.formula-box {
+background: #fef2f2; border: 2px solid #ef4444;
+border-radius: 8px; padding: 12px; margin: 10px 0;
+font-family: 'Amiri', serif;
+direction: ltr; text-align: center;
+}
+.svg-graph {
+display: block;
+margin: 12px auto;
+background: white;
+border: 2px solid #e5e7eb;
+border-radius: 12px;
+padding: 8px;
+box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.graph-container { text-align: center; margin: 10px 0; }
+.module-badge {
+display: inline-block;
+padding: 4px 16px;
+border-radius: 20px;
+font-weight: bold;
+font-size: 0.85rem;
+margin-bottom: 8px;
+}
+.module-1 { background: #fee2e2; color: #991b1b; }
+.module-2 { background: #fef3c7; color: #92400e; }
+.module-3 { background: #dbeafe; color: #1e40af; }
+.module-4 { background: #fce7f3; color: #9f1239; }
+.module-5 { background: #ecfdf5; color: #065f46; }
+</style>
+</head>
+<body class="bg-gradient-to-br from-red-50 to-orange-50 text-gray-800 p-4 md:p-8 min-h-screen">
+
+<div class="lang-switch no-print">
+<button class="lang-btn active" onclick="setLanguage('ar')" id="btn-ar">عربي</button>
+<button class="lang-btn" onclick="setLanguage('en')" id="btn-en">EN</button>
+</div>
+
+<div id="saveIndicator" class="save-indicator">💾 <span data-ar="تم الحفظ" data-en="Saved">تم الحفظ</span></div>
+
+<div id="timer-container" class="max-w-5xl mx-auto mb-4 text-center no-print">
+<div class="bg-white p-4 rounded-2xl shadow-md inline-block border-2 border-red-100">
+<span class="text-gray-600 ml-2" data-ar="⏰ الوقت المتبقي:" data-en="⏰ Time Remaining:">⏰ الوقت المتبقي:</span>
+<span id="timer" class="text-2xl font-bold text-red-600 font-mono">90:00</span>
+<span class="shuffle-badge" data-ar="📐 Derivatives - 30 سؤال" data-en="📐 Derivatives - 30 Questions">📐 Derivatives - 30 سؤال</span>
+</div>
+</div>
+
+<div class="max-w-5xl mx-auto mb-6 flex flex-wrap gap-3 justify-center no-print">
+<button onclick="toggleAnswers()" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-xl font-medium transition shadow cursor-pointer" data-ar="👀 إظهار / إخفاء الإجابات" data-en=" Show / Hide Answers">👀 إظهار / إخفاء الإجابات</button>
+<button onclick="window.print()" class="bg-gray-700 hover:bg-gray-900 text-white px-5 py-2 rounded-xl font-medium transition shadow cursor-pointer" data-ar="🖨️ طباعة" data-en="🖨️ Print">🖨️ طباعة</button>
+<button onclick="reshuffleExam()" class="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white px-5 py-2 rounded-xl font-medium transition shadow cursor-pointer" data-ar="🔄 أسئلة جديدة" data-en="🔄 New Questions">🔄 أسئلة جديدة</button>
+<button onclick="clearProgress()" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-xl font-medium transition shadow cursor-pointer" data-ar="🗑️ مسح التقدم" data-en="🗑️ Clear Progress">🗑️ مسح التقدم</button>
+</div>
+
+<header class="max-w-5xl mx-auto bg-white p-6 rounded-2xl shadow-lg mb-8 border-4 border-red-400">
+<div class="text-center">
+<div class="inline-block bg-red-600 text-white px-4 py-1 rounded-full text-xs font-bold mb-2">MATH GRADE 12 ADVANCED</div>
+<h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2" data-ar="📐 المشتقة والنهايات" data-en="📐 Derivatives & Limits">📐 المشتقة والنهايات</h1>
+<h2 class="text-lg text-red-600 font-semibold" data-ar="الصف الثاني عشر المتقدم (رياضيات)" data-en="Grade 12 Advanced (Mathematics)">الصف الثاني عشر المتقدم (رياضيات)</h2>
+<p class="text-sm text-gray-600 mt-2" data-ar="تعريف المشتقة، نهاية النسبة، كثيرات الحدود، الجذر التربيعي، الدوال الكسرية" data-en="Derivative definition, limit of ratio, polynomials, square root, rational functions">تعريف المشتقة، نهاية النسبة، كثيرات الحدود، الجذر التربيعي، الدوال الكسرية</p>
+<p class="text-xs text-green-600 mt-2 font-semibold" data-ar="💾 يتم حفظ تقدمك تلقائياً - 30 سؤالاً في 5 أقسام" data-en="💾 Your progress is saved automatically - 30 questions in 5 sections"> يتم حفظ تقدمك تلقائياً - 30 سؤالاً في 5 أقسام</p>
+</div>
+<div class="mt-4 flex flex-wrap justify-center gap-4 text-sm text-gray-600">
+<span><span data-ar="📅 التاريخ:" data-en="📅 Date:"> التاريخ:</span> <input type="text" id="examDate" class="border-b-2 border-red-300 bg-transparent w-28 text-center"></span>
+<span><span data-ar="😊 الاسم:" data-en="😊 Name:">😊 الاسم:</span> <input type="text" id="studentName" class="border-b-2 border-red-300 bg-transparent w-32 text-center" placeholder="اكتب اسمك"></span>
+<span><span data-ar="🏫 الشعبة:" data-en=" Class:">🏫 الشعبة:</span> <input type="text" id="studentClass" class="border-b-2 border-red-300 bg-transparent w-28 text-center" placeholder="الشعبة"></span>
+<span data-ar="⏰ المدة: 90 دقيقة" data-en=" Duration: 90 min">⏰ المدة: 90 دقيقة</span>
+<span data-ar="📊 المجموع: 100 درجة" data-en="📊 Total: 100 pts">📊 المجموع: 100 درجة</span>
+</div>
+</header>
+
+<div class="max-w-5xl mx-auto mb-6 bg-white p-4 rounded-xl shadow-md border-2 border-red-200 no-print">
+<h3 class="font-bold text-lg mb-3 text-red-700 text-center" data-ar="📐 القوانين الأساسية" data-en="📐 Key Formulae"> القوانين الأساسية</h3>
+<div class="grid md:grid-cols-3 gap-3 text-sm">
+<div class="formula-box"><strong>Derivative:</strong> f'(x) = lim(h→0) [f(x+h)-f(x)]/h</div>
+<div class="formula-box"><strong>Power Rule:</strong> d/dx[x] = nxⁿ⁻¹</div>
+<div class="formula-box"><strong>Square Root:</strong> d/dx[√x] = 1/(2√x)</div>
+<div class="formula-box"><strong>1/x Rule:</strong> d/dx[1/x] = -1/x²</div>
+<div class="formula-box"><strong>Conjugate:</strong> (√a-√b)(√a+√b) = a-b</div>
+<div class="formula-box"><strong>Polynomial:</strong> expand & simplify</div>
+</div>
+</div>
+
+<main class="max-w-5xl mx-auto space-y-8" id="exam-content"></main>
+
+<div class="text-center no-print pb-8 mt-8">
+<button onclick="gradeExam()" class="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white text-lg px-10 py-4 rounded-2xl font-bold shadow-xl transition transform hover:scale-105 cursor-pointer" data-ar="🎯 صحح إجاباتي!" data-en="🎯 Grade My Answers!">🎯 صحح إجاباتي!</button>
+</div>
+
+<div id="results-panel" class="max-w-5xl mx-auto mt-8 bg-white p-8 rounded-2xl shadow-2xl border-4 border-red-400 hidden no-print">
+<h2 class="text-3xl font-bold text-gray-900 mb-6 text-center" data-ar="🏆 نتيجتك يا بطل! 🏆" data-en=" Your Results, Champion! 🏆"> نتيجتك يا بطل! 🏆</h2>
+<div class="grid md:grid-cols-3 gap-4 mb-6">
+<div class="bg-red-50 p-4 rounded-xl text-center"><p data-ar="😊 الاسم" data-en="😊 Name">😊 الاسم</p><p id="res-name" class="font-bold text-xl text-red-600">-</p></div>
+<div class="bg-orange-50 p-4 rounded-xl text-center"><p data-ar="📅 التاريخ" data-en="📅 Date">📅 التاريخ</p><p id="res-date" class="font-bold text-xl text-orange-600">-</p></div>
+<div class="bg-red-50 p-4 rounded-xl text-center"><p data-ar="🌟 المجموع" data-en="🌟 Score">🌟 المجموع</p><p id="res-total" class="font-bold text-3xl text-red-600">0 / 100</p></div>
+</div>
+<div class="text-center mb-6">
+<span id="success-badge" class="success-badge grade-excellent">-</span>
+<p id="success-percent" class="text-4xl font-bold text-red-600 mt-2">0%</p>
+<p class="text-sm text-gray-500" data-ar="نسبة النجاح" data-en="Success Rate">نسبة النجاح</p>
+</div>
+<div class="bg-gray-50 p-6 rounded-xl mb-6">
+<h3 class="font-bold text-lg mb-4 text-gray-800" data-ar="📊 أدائك في كل قسم:" data-en="📊 Your Performance:">📊 أدائك في كل قسم:</h3>
+<div class="space-y-3" id="sections-performance"></div>
+</div>
+<div class="text-center mb-6">
+<button id="sendEmailBtn" onclick="sendResultsToEmail()" class="bg-gradient-to-r from-red-600 to-orange-600 text-white text-lg px-8 py-3 rounded-2xl font-bold shadow-xl transition cursor-pointer" data-ar="📧 أرسل النتيجة للمعلم" data-en="📧 Send Results to Teacher">📧 أرسل النتيجة للمعلم</button>
+<p id="emailStatus" class="text-sm mt-2 text-center font-medium"></p>
+</div>
+<div class="flex gap-3 justify-center">
+<button onclick="window.print()" class="bg-gray-700 text-white px-6 py-3 rounded-xl font-semibold" data-ar="🖨️ طباعة النتيجة" data-en="🖨️ Print Results">🖨️ طباعة النتيجة</button>
+</div>
+</div>
+
+<footer class="max-w-5xl mx-auto mt-10 mb-8 text-center text-gray-500 text-sm no-print">
+© <span data-ar="المشتقة والنهايات - الصف 12" data-en="Derivatives & Limits - Grade 12">المشتقة والنهايات - الصف 12</span> | Mr. Mohammed Hesham 📐
+</footer>
+
+<script>
+const PUBLIC_KEY = "Rb3Lq8tXaFmc5YHUH";
+const SERVICE_ID = "service_w15m64i";
+const TEMPLATE_ID = "template_5b0u2tq";
+const TARGET_EMAIL = "mohammedhesham872@gmail.com";
+emailjs.init(PUBLIC_KEY);
+
+const STORAGE_KEY = 'derivatives_limits_grade12_advanced_v1';
+const TOTAL_TIME = 5400;
+const TOTAL_QUESTIONS = 30;
+const TOTAL_SECTIONS = 5;
+const QUESTIONS_PER_SECTION = 6;
+
+let currentSeed = null;
+let answersVisible = false;
+let saveIndicatorTimeout = null;
+
+function mulberry32(a) {
+    return function() {
+        var t = a += 0x6D2B79F5;
+        t = Math.imul(t ^ t >>> 15, t | 1);
+        t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    }
+}
+let rng = null;
+
+function showSaveIndicator() {
+    const indicator = document.getElementById('saveIndicator');
+    indicator.classList.add('show');
+    if (saveIndicatorTimeout) clearTimeout(saveIndicatorTimeout);
+    saveIndicatorTimeout = setTimeout(() => indicator.classList.remove('show'), 1500);
+}
+
+function saveState(showIndicator = true) {
+    try {
+        const state = {
+            seed: currentSeed, lang: currentLang,
+            studentName: document.getElementById('studentName').value,
+            studentClass: document.getElementById('studentClass').value,
+            examDate: document.getElementById('examDate').value,
+            answers: getSelectedAnswers(),
+            timeRemaining: timeRemaining,
+            answersVisible: answersVisible, savedAt: Date.now()
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        if (showIndicator) showSaveIndicator();
+    } catch (e) { console.error('Save error:', e); }
+}
+
+function loadState() {
+    try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        return saved ? JSON.parse(saved) : null;
+    } catch (e) { return null; }
+}
+
+function getSelectedAnswers() {
+    const answers = {};
+    for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if (selected) answers[i] = selected.value;
+    }
+    return answers;
+}
+
+function restoreAnswers(answers) {
+    if (!answers) return;
+    for (const [idx, val] of Object.entries(answers)) {
+        const radio = document.querySelector(`input[name="q${idx}"][value="${val}"]`);
+        if (radio) radio.checked = true;
+    }
+}
+
+function clearProgress() {
+    const msg = currentLang === 'ar' ? '⚠️ هل أنت متأكد من مسح كل التقدم؟' : '⚠️ Clear all progress?';
+    if (confirm(msg)) { localStorage.removeItem(STORAGE_KEY); location.reload(); }
+}
+
+function setupAnswerListeners() {
+    document.getElementById('exam-content').addEventListener('change', (e) => {
+        if (e.target.type === 'radio') saveState();
+    });
+}
+
+function setupInputListeners() {
+    ['studentName', 'studentClass', 'examDate'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', () => saveState(false));
+            el.addEventListener('blur', () => saveState());
+        }
+    });
+}
+
+// ==================== SVG Diagrams ====================
+const svgGraphs = {
+    derivative_definition: `<svg class="svg-graph" width="400" height="260" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="250" rx="12" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#991b1b" font-weight="bold">📐 تعريف المشتقة - Derivative Definition</text>
+        <text x="200" y="60" text-anchor="middle" font-size="16" fill="#991b1b" font-family="'Amiri', serif" font-weight="bold">f'(x) = lim(h→0) [f(x+h) - f(x)] / h</text>
+        <text x="200" y="90" text-anchor="middle" font-size="12" fill="#991b1b">Slope of tangent line at point x</text>
+        <line x1="50" y1="200" x2="350" y2="200" stroke="#374151" stroke-width="2"/>
+        <line x1="50" y1="200" x2="50" y2="100" stroke="#374151" stroke-width="2"/>
+        <path d="M 80 180 Q 150 120 220 140 Q 290 160 340 120" fill="none" stroke="#dc2626" stroke-width="3"/>
+        <circle cx="200" cy="140" r="5" fill="#2563eb"/>
+        <line x1="140" y1="180" x2="280" y2="100" stroke="#10b981" stroke-width="2" stroke-dasharray="4"/>
+        <text x="200" y="95" text-anchor="middle" font-size="10" fill="#10b981" font-weight="bold">Tangent Line</text>
+        <text x="200" y="230" text-anchor="middle" font-size="11" fill="#991b1b">h → 0 means we take the limit as h approaches 0</text>
+        <text x="200" y="250" text-anchor="middle" font-size="11" fill="#991b1b">This gives us the instantaneous rate of change</text>
+    </svg>`,
+    
+    polynomial_derivative: `<svg class="svg-graph" width="400" height="260" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="250" rx="12" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#92400e" font-weight="bold"> مشتقة كثير الحدود - Polynomial Derivative</text>
+        <text x="200" y="55" text-anchor="middle" font-size="13" fill="#92400e" font-family="'Amiri', serif">f(x) = 3x³ + 2x - 1</text>
+        <text x="200" y="80" text-anchor="middle" font-size="12" fill="#92400e">Step 1: f(x+h) = 3(x+h)³ + 2(x+h) - 1</text>
+        <text x="200" y="100" text-anchor="middle" font-size="12" fill="#92400e">Step 2: Expand (x+h)³ = x³ + 3x²h + 3xh² + h³</text>
+        <text x="200" y="120" text-anchor="middle" font-size="12" fill="#92400e">Step 3: f(x+h) - f(x) = 9x²h + 9xh² + 3h³ + 2h</text>
+        <text x="200" y="140" text-anchor="middle" font-size="12" fill="#92400e">Step 4: Divide by h → 9x² + 9xh + 3h² + 2</text>
+        <text x="200" y="160" text-anchor="middle" font-size="12" fill="#92400e">Step 5: Take limit h→0 → 9x² + 2</text>
+        <rect x="50" y="180" width="300" height="50" rx="6" fill="#fde68a" stroke="#f59e0b" stroke-width="2"/>
+        <text x="200" y="210" text-anchor="middle" font-size="14" fill="#92400e" font-family="'Amiri', serif" font-weight="bold">f'(x) = 9x² + 2</text>
+        <text x="200" y="240" text-anchor="middle" font-size="11" fill="#92400e">f'(1) = 11, f'(2) = 38, f'(3) = 83</text>
+    </svg>`,
+    
+    square_root_derivative: `<svg class="svg-graph" width="400" height="280" viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="270" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#1e40af" font-weight="bold">📐 مشتقة الجذر التربيعي - √x Derivative</text>
+        <text x="200" y="50" text-anchor="middle" font-size="13" fill="#1e40af" font-family="'Amiri', serif">f(x) = √x, find f'(x)</text>
+        <text x="200" y="75" text-anchor="middle" font-size="12" fill="#1e40af">Step 1: [√(x+h) - √x] / h</text>
+        <text x="200" y="95" text-anchor="middle" font-size="11" fill="#dc2626" font-weight="bold">Multiply by conjugate: [√(x+h) + √x] / [√(x+h) + √x]</text>
+        <text x="200" y="120" text-anchor="middle" font-size="12" fill="#1e40af">Step 2: Numerator becomes (x+h) - x = h</text>
+        <text x="200" y="140" text-anchor="middle" font-size="12" fill="#1e40af">Step 3: h / [h(√(x+h) + √x)]</text>
+        <text x="200" y="160" text-anchor="middle" font-size="12" fill="#1e40af">Step 4: Cancel h → 1 / [√(x+h) + √x]</text>
+        <text x="200" y="180" text-anchor="middle" font-size="12" fill="#1e40af">Step 5: Limit h→0 → 1 / [2√x]</text>
+        <rect x="50" y="200" width="300" height="50" rx="6" fill="#bfdbfe" stroke="#2563eb" stroke-width="2"/>
+        <text x="200" y="230" text-anchor="middle" font-size="14" fill="#1e40af" font-family="'Amiri', serif" font-weight="bold">f'(x) = 1/(2√x) = (1/2)x^(-1/2)</text>
+        <text x="200" y="260" text-anchor="middle" font-size="11" fill="#1e40af">Defined only for x > 0 (not x = 0)</text>
+    </svg>`,
+    
+    reciprocal_derivative: `<svg class="svg-graph" width="400" height="280" viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="270" rx="12" fill="#fce7f3" stroke="#ec4899" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#9f1239" font-weight="bold">📐 مشتقة 1/x - Reciprocal Derivative</text>
+        <text x="200" y="50" text-anchor="middle" font-size="13" fill="#9f1239" font-family="'Amiri', serif">f(x) = 1/x (x ≠ 0), find f'(x)</text>
+        <text x="200" y="75" text-anchor="middle" font-size="12" fill="#9f1239">Step 1: [1/(x+h) - 1/x] / h</text>
+        <text x="200" y="95" text-anchor="middle" font-size="11" fill="#dc2626" font-weight="bold">Find common denominator: x(x+h)</text>
+        <text x="200" y="115" text-anchor="middle" font-size="12" fill="#9f1239">Step 2: [x - (x+h)] / [x(x+h)·h]</text>
+        <text x="200" y="135" text-anchor="middle" font-size="12" fill="#9f1239">Step 3: -h / [x(x+h)·h]</text>
+        <text x="200" y="155" text-anchor="middle" font-size="12" fill="#9f1239">Step 4: Cancel h → -1 / [x(x+h)]</text>
+        <text x="200" y="175" text-anchor="middle" font-size="12" fill="#9f1239">Step 5: Limit h→0 → -1/x²</text>
+        <rect x="50" y="195" width="300" height="50" rx="6" fill="#fbcfe8" stroke="#ec4899" stroke-width="2"/>
+        <text x="200" y="225" text-anchor="middle" font-size="14" fill="#9f1239" font-family="'Amiri', serif" font-weight="bold">f'(x) = -1/x² = -x⁻²</text>
+        <text x="200" y="255" text-anchor="middle" font-size="11" fill="#9f1239">Note: f'(x) is undefined at x = 0</text>
+    </svg>`,
+    
+    limit_process: `<svg class="svg-graph" width="400" height="260" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="250" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#065f46" font-weight="bold">📊 عملية النهاية - Limit Process</text>
+        <rect x="30" y="50" width="340" height="40" rx="6" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="200" y="75" text-anchor="middle" font-size="12" fill="#065f46" font-weight="bold">1. Substitute f(x+h) and f(x)</text>
+        <rect x="30" y="100" width="340" height="40" rx="6" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="200" y="125" text-anchor="middle" font-size="12" fill="#065f46" font-weight="bold">2. Simplify numerator (expand, combine)</text>
+        <rect x="30" y="150" width="340" height="40" rx="6" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="200" y="175" text-anchor="middle" font-size="12" fill="#065f46" font-weight="bold">3. Factor out h and cancel with denominator</text>
+        <rect x="30" y="200" width="340" height="40" rx="6" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="200" y="225" text-anchor="middle" font-size="12" fill="#065f46" font-weight="bold">4. Take limit as h → 0 (substitute h = 0)</text>
+    </svg>`,
+    
+    tangent_line: `<svg class="svg-graph" width="400" height="260" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="250" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#5b21b6" font-weight="bold">📈 المماس والمشتقة - Tangent & Derivative</text>
+        <line x1="50" y1="220" x2="370" y2="220" stroke="#374151" stroke-width="2"/>
+        <line x1="50" y1="40" x2="50" y2="240" stroke="#374151" stroke-width="2"/>
+        <text x="375" y="215" font-size="11" fill="#374151">x</text>
+        <text x="20" y="130" text-anchor="middle" font-size="11" fill="#374151" transform="rotate(-90 20 130)">y</text>
+        <path d="M 80 180 Q 150 100 220 120 Q 290 140 340 80" fill="none" stroke="#7c3aed" stroke-width="3"/>
+        <circle cx="200" cy="120" r="6" fill="#dc2626"/>
+        <text x="210" y="110" font-size="11" fill="#dc2626" font-weight="bold">(a, f(a))</text>
+        <line x1="140" y1="160" x2="280" y2="80" stroke="#10b981" stroke-width="2"/>
+        <text x="250" y="75" font-size="11" fill="#10b981" font-weight="bold">Tangent</text>
+        <text x="200" y="245" text-anchor="middle" font-size="11" fill="#5b21b6">f'(a) = slope of tangent at x = a</text>
+    </svg>`
+};
+
+// ==================== EXAM DATA - 30 QUESTIONS ====================
+const originalExamData = {
+    sections: [
+        {
+            id: 'sec1',
+            title: { ar: ' القسم 1: تعريف المشتقة (Q1-Q6)', en: '🔹 Section 1: Derivative Definition (Q1-Q6)' },
+            questions: [
+                {
+                    q: { ar: 'ما تعريف المشتقة f\'(x) باستخدام النهاية؟', en: 'What is the definition of derivative f\'(x) using limits?' },
+                    svg: svgGraphs.derivative_definition,
+                    options: [
+                        { ar: '<span class="math-display">lim(h→0) [f(x+h) - f(x)] / h</span>', en: '<span class="math-display">lim(h→0) [f(x+h) - f(x)] / h</span>' },
+                        { ar: '<span class="math-display">lim(h→0) [f(x) - f(x-h)] / h</span>', en: '<span class="math-display">lim(h→0) [f(x) - f(x-h)] / h</span>' },
+                        { ar: '<span class="math-display">lim(h→∞) [f(x+h) - f(x)] / h</span>', en: '<span class="math-display">lim(h→∞) [f(x+h) - f(x)] / h</span>' },
+                        { ar: '<span class="math-display">[f(x+h) - f(x)] / h</span> بدون نهاية', en: '<span class="math-display">[f(x+h) - f(x)] / h</span> without limit' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f\'(x) = lim(h→0) [f(x+h) - f(x)] / h (نهاية نسبة التغير)', en: 'f\'(x) = lim(h→0) [f(x+h) - f(x)] / h (limit of difference quotient)' }
+                },
+                {
+                    q: { ar: 'ماذا تمثل المشتقة f\'(x) هندسياً؟', en: 'What does derivative f\'(x) represent geometrically?' },
+                    options: [
+                        { ar: 'ميل المماس للمنحنى عند النقطة x', en: 'Slope of tangent line to curve at point x' },
+                        { ar: 'مساحة تحت المنحنى', en: 'Area under the curve' },
+                        { ar: 'طول المنحنى', en: 'Length of curve' },
+                        { ar: 'قيمة الدالة عند x', en: 'Value of function at x' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'المشتقة تمثل ميل المماس (slope of tangent line) عند النقطة', en: 'Derivative represents slope of tangent line at the point' }
+                },
+                {
+                    q: { ar: 'في تعريف المشتقة، ماذا يعني h → 0؟', en: 'In derivative definition, what does h → 0 mean?' },
+                    options: [
+                        { ar: 'نقترب من الصفر لكن لا نساويه', en: 'We approach zero but never equal it' },
+                        { ar: 'h تساوي صفر تماماً', en: 'h equals exactly zero' },
+                        { ar: 'h تذهب إلى اللانهاية', en: 'h goes to infinity' },
+                        { ar: 'h قيمة ثابتة', en: 'h is a constant value' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'h → 0 يعني نقترب من الصفر (نهاية)، لا نساويه لأن القسمة على صفر غير معرّفة', en: 'h → 0 means we approach zero (limit), not equal it (division by zero undefined)' }
+                },
+                {
+                    q: { ar: 'ما الفرق بين f\'(x) و f(x)؟', en: 'What is the difference between f\'(x) and f(x)?' },
+                    options: [
+                        { ar: 'f\'(x) هي المشتقة (معدل التغير)، f(x) هي الدالة الأصلية', en: 'f\'(x) is derivative (rate of change), f(x) is original function' },
+                        { ar: 'لا فرق', en: 'No difference' },
+                        { ar: 'f\'(x) أكبر دائماً', en: 'f\'(x) is always larger' },
+                        { ar: 'f(x) هي المشتقة', en: 'f(x) is the derivative' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f\'(x) هي مشتقة f(x)، تمثل معدل التغير اللحظي', en: 'f\'(x) is derivative of f(x), represents instantaneous rate of change' }
+                },
+                {
+                    q: { ar: 'لماذا نضرب في المرافق (conjugate) عند اشتقاق √x؟', en: 'Why do we multiply by conjugate when differentiating √x?' },
+                    options: [
+                        { ar: 'للتخلص من الجذور في البسط وتبسيط الكسر', en: 'To eliminate radicals in numerator and simplify fraction' },
+                        { ar: 'لأنها قاعدة إلزامية', en: 'Because it is a mandatory rule' },
+                        { ar: 'لتغيير إشارة البسط', en: 'To change sign of numerator' },
+                        { ar: 'لا سبب محدد', en: 'No specific reason' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'المرافق يساعد في التخلص من (x+h) - √x باستخدام (a-b)(a+b) = a²-b²', en: 'Conjugate helps eliminate √(x+h) - √x using (a-b)(a+b) = a²-b²' }
+                },
+                {
+                    q: { ar: 'ما خطوات إيجاد المشتقة من التعريف؟', en: 'What are steps to find derivative from definition?' },
+                    svg: svgGraphs.limit_process,
+                    options: [
+                        { ar: 'عوض، بسّط، اختصر h، خذ النهاية', en: 'Substitute, simplify, cancel h, take limit' },
+                        { ar: 'اشتق مباشرة', en: 'Differentiate directly' },
+                        { ar: 'استخدم الجدول فقط', en: 'Use table only' },
+                        { ar: 'احسب المساحة', en: 'Calculate area' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '1) عوض f(x+h) و f(x)، 2) بسّط البسط، 3) اختصر h، 4) خذ النهاية h→0', en: '1) Substitute f(x+h) and f(x), 2) Simplify numerator, 3) Cancel h, 4) Take limit h→0' }
+                }
+            ]
+        },
+        {
+            id: 'sec2',
+            title: { ar: '🔹 القسم 2: مشتقة كثيرات الحدود (Q7-Q12)', en: '🔹 Section 2: Polynomial Derivatives (Q7-Q12)' },
+            questions: [
+                {
+                    q: { ar: 'أوجد مشتقة <span class="math-display">f(x) = 3x³ + 2x - 1</span> من التعريف:', en: 'Find derivative of <span class="math-display">f(x) = 3x³ + 2x - 1</span> from definition:' },
+                    svg: svgGraphs.polynomial_derivative,
+                    options: [
+                        { ar: '<span class="math-display">f\'(x) = 9x² + 2</span>', en: '<span class="math-display">f\'(x) = 9x² + 2</span>' },
+                        { ar: '<span class="math-display">f\'(x) = 3x² + 2</span>', en: '<span class="math-display">f\'(x) = 3x² + 2</span>' },
+                        { ar: '<span class="math-display">f\'(x) = 9x² + 2x</span>', en: '<span class="math-display">f\'(x) = 9x² + 2x</span>' },
+                        { ar: '<span class="math-display">f\'(x) = 3x³ + 2</span>', en: '<span class="math-display">f\'(x) = 3x³ + 2</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f\'(x) = 9x² + 2 (بعد التبسيط وأخذ النهاية)', en: 'f\'(x) = 9x² + 2 (after simplification and taking limit)' }
+                },
+                {
+                    q: { ar: 'ما قيمة <span class="math-display">f\'(1)</span> للدالة <span class="math-display">f(x) = 3x³ + 2x - 1</span>؟', en: 'What is <span class="math-display">f\'(1)</span> for <span class="math-display">f(x) = 3x³ + 2x - 1</span>?' },
+                    options: [
+                        { ar: '<span class="math-display">11</span>', en: '<span class="math-display">11</span>' },
+                        { ar: '<span class="math-display">9</span>', en: '<span class="math-display">9</span>' },
+                        { ar: '<span class="math-display">2</span>', en: '<span class="math-display">2</span>' },
+                        { ar: '<span class="math-display">5</span>', en: '<span class="math-display">5</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f\'(1) = 9(1)² + 2 = 9 + 2 = 11', en: 'f\'(1) = 9(1)² + 2 = 9 + 2 = 11' }
+                },
+                {
+                    q: { ar: 'ما قيمة <span class="math-display">f\'(2)</span> لنفس الدالة؟', en: 'What is <span class="math-display">f\'(2)</span> for same function?' },
+                    options: [
+                        { ar: '<span class="math-display">38</span>', en: '<span class="math-display">38</span>' },
+                        { ar: '<span class="math-display">18</span>', en: '<span class="math-display">18</span>' },
+                        { ar: '<span class="math-display">36</span>', en: '<span class="math-display">36</span>' },
+                        { ar: '<span class="math-display">40</span>', en: '<span class="math-display">40</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f\'(2) = 9(4) + 2 = 36 + 2 = 38', en: 'f\'(2) = 9(4) + 2 = 36 + 2 = 38' }
+                },
+                {
+                    q: { ar: 'ما قيمة <span class="math-display">f\'(3)</span> لنفس الدالة؟', en: 'What is <span class="math-display">f\'(3)</span> for same function?' },
+                    options: [
+                        { ar: '<span class="math-display">83</span>', en: '<span class="math-display">83</span>' },
+                        { ar: '<span class="math-display">27</span>', en: '<span class="math-display">27</span>' },
+                        { ar: '<span class="math-display">81</span>', en: '<span class="math-display">81</span>' },
+                        { ar: '<span class="math-display">29</span>', en: '<span class="math-display">29</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f\'(3) = 9(9) + 2 = 81 + 2 = 83', en: 'f\'(3) = 9(9) + 2 = 81 + 2 = 83' }
+                },
+                {
+                    q: { ar: 'أوجد مشتقة <span class="math-display">f(x) = x²</span> من التعريف:', en: 'Find derivative of <span class="math-display">f(x) = x²</span> from definition:' },
+                    options: [
+                        { ar: '<span class="math-display">f\'(x) = 2x</span>', en: '<span class="math-display">f\'(x) = 2x</span>' },
+                        { ar: '<span class="math-display">f\'(x) = x</span>', en: '<span class="math-display">f\'(x) = x</span>' },
+                        { ar: '<span class="math-display">f\'(x) = 2</span>', en: '<span class="math-display">f\'(x) = 2</span>' },
+                        { ar: '<span class="math-display">f\'(x) = x²</span>', en: '<span class="math-display">f\'(x) = x²</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f\'(x) = lim(h→0) [(x+h)² - x²]/h = lim(h→0) [2xh + h²]/h = 2x', en: 'f\'(x) = lim(h→0) [(x+h)² - x²]/h = lim(h→0) [2xh + h²]/h = 2x' }
+                },
+                {
+                    q: { ar: 'أوجد مشتقة <span class="math-display">f(x) = x³</span> من التعريف:', en: 'Find derivative of <span class="math-display">f(x) = x³</span> from definition:' },
+                    options: [
+                        { ar: '<span class="math-display">f\'(x) = 3x²</span>', en: '<span class="math-display">f\'(x) = 3x²</span>' },
+                        { ar: '<span class="math-display">f\'(x) = x²</span>', en: '<span class="math-display">f\'(x) = x²</span>' },
+                        { ar: '<span class="math-display">f\'(x) = 3x</span>', en: '<span class="math-display">f\'(x) = 3x</span>' },
+                        { ar: '<span class="math-display">f\'(x) = x³</span>', en: '<span class="math-display">f\'(x) = x³</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f\'(x) = 3x² (باستخدام قاعدة القوة أو من التعريف)', en: 'f\'(x) = 3x² (using power rule or from definition)' }
+                }
+            ]
+        },
+        {
+            id: 'sec3',
+            title: { ar: '🔹 القسم 3: مشتقة الجذر التربيعي (Q13-Q18)', en: '🔹 Section 3: Square Root Derivative (Q13-Q18)' },
+            questions: [
+                {
+                    q: { ar: 'أوجد مشتقة <span class="math-display">f(x) = √x</span> من التعريف:', en: 'Find derivative of <span class="math-display">f(x) = √x</span> from definition:' },
+                    svg: svgGraphs.square_root_derivative,
+                    options: [
+                        { ar: '<span class="math-display">f\'(x) = 1/(2√x)</span>', en: '<span class="math-display">f\'(x) = 1/(2√x)</span>' },
+                        { ar: '<span class="math-display">f\'(x) = x</span>', en: '<span class="math-display">f\'(x) = √x</span>' },
+                        { ar: '<span class="math-display">f\'(x) = 2√x</span>', en: '<span class="math-display">f\'(x) = 2√x</span>' },
+                        { ar: '<span class="math-display">f\'(x) = 1/√x</span>', en: '<span class="math-display">f\'(x) = 1/√x</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f\'(x) = 1/(2√x) = (1/2)x^(-1/2) بعد الضرب في المرافق والاختصار', en: 'f\'(x) = 1/(2√x) = (1/2)x^(-1/2) after multiplying by conjugate and canceling' }
+                },
+                {
+                    q: { ar: 'ما قيمة <span class="math-display">f\'(4)</span> للدالة <span class="math-display">f(x) = x</span>؟', en: 'What is <span class="math-display">f\'(4)</span> for <span class="math-display">f(x) = √x</span>?' },
+                    options: [
+                        { ar: '<span class="math-display">1/4</span>', en: '<span class="math-display">1/4</span>' },
+                        { ar: '<span class="math-display">1/2</span>', en: '<span class="math-display">1/2</span>' },
+                        { ar: '<span class="math-display">2</span>', en: '<span class="math-display">2</span>' },
+                        { ar: '<span class="math-display">4</span>', en: '<span class="math-display">4</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f\'(4) = 1/(2√4) = 1/(2·2) = 1/4', en: 'f\'(4) = 1/(2√4) = 1/(2·2) = 1/4' }
+                },
+                {
+                    q: { ar: 'ما قيمة <span class="math-display">f\'(9)</span> للدالة <span class="math-display">f(x) = √x</span>؟', en: 'What is <span class="math-display">f\'(9)</span> for <span class="math-display">f(x) = √x</span>?' },
+                    options: [
+                        { ar: '<span class="math-display">1/6</span>', en: '<span class="math-display">1/6</span>' },
+                        { ar: '<span class="math-display">1/3</span>', en: '<span class="math-display">1/3</span>' },
+                        { ar: '<span class="math-display">3</span>', en: '<span class="math-display">3</span>' },
+                        { ar: '<span class="math-display">1/9</span>', en: '<span class="math-display">1/9</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f\'(9) = 1/(2√9) = 1/(2·3) = 1/6', en: 'f\'(9) = 1/(2√9) = 1/(2·3) = 1/6' }
+                },
+                {
+                    q: { ar: 'لماذا f\'(x) = 1/(2√x) غير معرّفة عند x = 0؟', en: 'Why is f\'(x) = 1/(2√x) undefined at x = 0?' },
+                    options: [
+                        { ar: 'لأن القسمة على صفر غير معرّفة', en: 'Because division by zero is undefined' },
+                        { ar: 'لأن √0 = 0', en: 'Because √0 = 0' },
+                        { ar: 'لأن x يجب أن يكون سالباً', en: 'Because x must be negative' },
+                        { ar: 'لا سبب', en: 'No reason' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'عند x = 0: 1/(2·0) = 1/0 غير معرّف (قسمة على صفر)', en: 'At x = 0: 1/(2·0) = 1/0 is undefined (division by zero)' }
+                },
+                {
+                    q: { ar: 'في اشتقاق √x، ما نتيجة ضرب البسط في المرافق <span class="math-display">[√(x+h) - √x][√(x+h) + √x]</span>؟', en: 'In differentiating √x, what is result of multiplying numerator by conjugate?' },
+                    options: [
+                        { ar: '<span class="math-display">(x+h) - x = h</span>', en: '<span class="math-display">(x+h) - x = h</span>' },
+                        { ar: '<span class="math-display">x + h + x</span>', en: '<span class="math-display">x + h + x</span>' },
+                        { ar: '<span class="math-display">h²</span>', en: '<span class="math-display">h²</span>' },
+                        { ar: '<span class="math-display">2x + h</span>', en: '<span class="math-display">2x + h</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '[√(x+h)]² - [√x]² = (x+h) - x = h', en: '[√(x+h)]² - [√x]² = (x+h) - x = h' }
+                },
+                {
+                    q: { ar: 'ما الصيغة المكافئة لـ <span class="math-display">1/(2√x)</span>؟', en: 'What is equivalent form of <span class="math-display">1/(2√x)</span>?' },
+                    options: [
+                        { ar: '<span class="math-display">(1/2)x^(-1/2)</span>', en: '<span class="math-display">(1/2)x^(-1/2)</span>' },
+                        { ar: '<span class="math-display">2x^(1/2)</span>', en: '<span class="math-display">2x^(1/2)</span>' },
+                        { ar: '<span class="math-display">x^(-2)</span>', en: '<span class="math-display">x^(-2)</span>' },
+                        { ar: '<span class="math-display">(1/2)x^(1/2)</span>', en: '<span class="math-display">(1/2)x^(1/2)</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '1/(2√x) = 1/(2x^(1/2)) = (1/2)x^(-1/2)', en: '1/(2√x) = 1/(2x^(1/2)) = (1/2)x^(-1/2)' }
+                }
+            ]
+        },
+        {
+            id: 'sec4',
+            title: { ar: ' القسم 4: مشتقة الدوال الكسرية (Q19-Q24)', en: '🔹 Section 4: Rational Function Derivatives (Q19-Q24)' },
+            questions: [
+                {
+                    q: { ar: 'أوجد مشتقة <span class="math-display">f(x) = 1/x</span> من التعريف:', en: 'Find derivative of <span class="math-display">f(x) = 1/x</span> from definition:' },
+                    svg: svgGraphs.reciprocal_derivative,
+                    options: [
+                        { ar: '<span class="math-display">f\'(x) = -1/x²</span>', en: '<span class="math-display">f\'(x) = -1/x²</span>' },
+                        { ar: '<span class="math-display">f\'(x) = 1/x²</span>', en: '<span class="math-display">f\'(x) = 1/x²</span>' },
+                        { ar: '<span class="math-display">f\'(x) = -1/x</span>', en: '<span class="math-display">f\'(x) = -1/x</span>' },
+                        { ar: '<span class="math-display">f\'(x) = 1/x</span>', en: '<span class="math-display">f\'(x) = 1/x</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f\'(x) = -1/x² = -x² (بعد توحيد المقامات والاختصار)', en: 'f\'(x) = -1/x² = -x⁻² (after finding common denominator and canceling)' }
+                },
+                {
+                    q: { ar: 'ما قيمة <span class="math-display">f\'(2)</span> للدالة <span class="math-display">f(x) = 1/x</span>؟', en: 'What is <span class="math-display">f\'(2)</span> for <span class="math-display">f(x) = 1/x</span>?' },
+                    options: [
+                        { ar: '<span class="math-display">-1/4</span>', en: '<span class="math-display">-1/4</span>' },
+                        { ar: '<span class="math-display">1/4</span>', en: '<span class="math-display">1/4</span>' },
+                        { ar: '<span class="math-display">-1/2</span>', en: '<span class="math-display">-1/2</span>' },
+                        { ar: '<span class="math-display">1/2</span>', en: '<span class="math-display">1/2</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f\'(2) = -1/2² = -1/4', en: 'f\'(2) = -1/2² = -1/4' }
+                },
+                {
+                    q: { ar: 'ما قيمة <span class="math-display">f\'(3)</span> للدالة <span class="math-display">f(x) = 1/x</span>؟', en: 'What is <span class="math-display">f\'(3)</span> for <span class="math-display">f(x) = 1/x</span>?' },
+                    options: [
+                        { ar: '<span class="math-display">-1/9</span>', en: '<span class="math-display">-1/9</span>' },
+                        { ar: '<span class="math-display">1/9</span>', en: '<span class="math-display">1/9</span>' },
+                        { ar: '<span class="math-display">-1/3</span>', en: '<span class="math-display">-1/3</span>' },
+                        { ar: '<span class="math-display">1/3</span>', en: '<span class="math-display">1/3</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f\'(3) = -1/3² = -1/9', en: 'f\'(3) = -1/3² = -1/9' }
+                },
+                {
+                    q: { ar: 'في اشتقاق 1/x، ما البسط بعد توحيد المقامات <span class="math-display">1/(x+h) - 1/x</span>؟', en: 'In differentiating 1/x, what is numerator after common denominator?' },
+                    options: [
+                        { ar: '<span class="math-display">x - (x+h) = -h</span>', en: '<span class="math-display">x - (x+h) = -h</span>' },
+                        { ar: '<span class="math-display">x + (x+h) = 2x+h</span>', en: '<span class="math-display">x + (x+h) = 2x+h</span>' },
+                        { ar: '<span class="math-display">h</span>', en: '<span class="math-display">h</span>' },
+                        { ar: '<span class="math-display">x·h</span>', en: '<span class="math-display">x·h</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '1/(x+h) - 1/x = [x - (x+h)]/[x(x+h)] = -h/[x(x+h)]', en: '1/(x+h) - 1/x = [x - (x+h)]/[x(x+h)] = -h/[x(x+h)]' }
+                },
+                {
+                    q: { ar: 'أوجد مشتقة <span class="math-display">f(x) = 1/x²</span> باستخدام قاعدة القوة:', en: 'Find derivative of <span class="math-display">f(x) = 1/x²</span> using power rule:' },
+                    options: [
+                        { ar: '<span class="math-display">f\'(x) = -2/x³</span>', en: '<span class="math-display">f\'(x) = -2/x³</span>' },
+                        { ar: '<span class="math-display">f\'(x) = 2/x³</span>', en: '<span class="math-display">f\'(x) = 2/x³</span>' },
+                        { ar: '<span class="math-display">f\'(x) = -1/x³</span>', en: '<span class="math-display">f\'(x) = -1/x³</span>' },
+                        { ar: '<span class="math-display">f\'(x) = 2/x</span>', en: '<span class="math-display">f\'(x) = 2/x</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f(x) = x⁻² → f\'(x) = -2x⁻³ = -2/x³', en: 'f(x) = x⁻² → f\'(x) = -2x⁻³ = -2/x³' }
+                },
+                {
+                    q: { ar: 'أوجد مشتقة <span class="math-display">f(x) = 5/x</span>:', en: 'Find derivative of <span class="math-display">f(x) = 5/x</span>:' },
+                    options: [
+                        { ar: '<span class="math-display">f\'(x) = -5/x²</span>', en: '<span class="math-display">f\'(x) = -5/x²</span>' },
+                        { ar: '<span class="math-display">f\'(x) = 5/x²</span>', en: '<span class="math-display">f\'(x) = 5/x²</span>' },
+                        { ar: '<span class="math-display">f\'(x) = -5/x</span>', en: '<span class="math-display">f\'(x) = -5/x</span>' },
+                        { ar: '<span class="math-display">f\'(x) = 5</span>', en: '<span class="math-display">f\'(x) = 5</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f(x) = 5x⁻¹ → f\'(x) = -5x⁻² = -5/x²', en: 'f(x) = 5x⁻¹ → f\'(x) = -5x⁻² = -5/x²' }
+                }
+            ]
+        },
+        {
+            id: 'sec5',
+            title: { ar: ' القسم 5: تطبيقات وتقييم (Q25-Q30)', en: ' Section 5: Applications & Evaluation (Q25-Q30)' },
+            questions: [
+                {
+                    q: { ar: 'ما ميل المماس للدالة <span class="math-display">f(x) = x²</span> عند x = 3؟', en: 'What is slope of tangent to <span class="math-display">f(x) = x²</span> at x = 3?' },
+                    svg: svgGraphs.tangent_line,
+                    options: [
+                        { ar: '<span class="math-display">6</span>', en: '<span class="math-display">6</span>' },
+                        { ar: '<span class="math-display">9</span>', en: '<span class="math-display">9</span>' },
+                        { ar: '<span class="math-display">3</span>', en: '<span class="math-display">3</span>' },
+                        { ar: '<span class="math-display">12</span>', en: '<span class="math-display">12</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f\'(x) = 2x → f\'(3) = 2(3) = 6', en: 'f\'(x) = 2x → f\'(3) = 2(3) = 6' }
+                },
+                {
+                    q: { ar: 'ما ميل المماس للدالة <span class="math-display">f(x) = √x</span> عند x = 4؟', en: 'What is slope of tangent to <span class="math-display">f(x) = √x</span> at x = 4?' },
+                    options: [
+                        { ar: '<span class="math-display">1/4</span>', en: '<span class="math-display">1/4</span>' },
+                        { ar: '<span class="math-display">1/2</span>', en: '<span class="math-display">1/2</span>' },
+                        { ar: '<span class="math-display">2</span>', en: '<span class="math-display">2</span>' },
+                        { ar: '<span class="math-display">4</span>', en: '<span class="math-display">4</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f\'(x) = 1/(2√x) → f\'(4) = 1/(2·2) = 1/4', en: 'f\'(x) = 1/(2√x) → f\'(4) = 1/(2·2) = 1/4' }
+                },
+                {
+                    q: { ar: 'إذا كانت <span class="math-display">f(x) = 3x³ + 2x - 1</span>، فما <span class="math-display">f\'(0)</span>؟', en: 'If <span class="math-display">f(x) = 3x³ + 2x - 1</span>, what is <span class="math-display">f\'(0)</span>?' },
+                    options: [
+                        { ar: '<span class="math-display">2</span>', en: '<span class="math-display">2</span>' },
+                        { ar: '<span class="math-display">0</span>', en: '<span class="math-display">0</span>' },
+                        { ar: '<span class="math-display">-1</span>', en: '<span class="math-display">-1</span>' },
+                        { ar: '<span class="math-display">3</span>', en: '<span class="math-display">3</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f\'(x) = 9x² + 2 → f\'(0) = 0 + 2 = 2', en: 'f\'(x) = 9x² + 2 → f\'(0) = 0 + 2 = 2' }
+                },
+                {
+                    q: { ar: 'ما مشتقة الدالة الثابتة <span class="math-display">f(x) = 5</span>؟', en: 'What is derivative of constant function <span class="math-display">f(x) = 5</span>?' },
+                    options: [
+                        { ar: '<span class="math-display">0</span>', en: '<span class="math-display">0</span>' },
+                        { ar: '<span class="math-display">5</span>', en: '<span class="math-display">5</span>' },
+                        { ar: '<span class="math-display">1</span>', en: '<span class="math-display">1</span>' },
+                        { ar: '<span class="math-display">x</span>', en: '<span class="math-display">x</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'مشتقة الثابت = 0 (لأن التغير صفر)', en: 'Derivative of constant = 0 (because change is zero)' }
+                },
+                {
+                    q: { ar: 'ما مشتقة <span class="math-display">f(x) = x</span>؟', en: 'What is derivative of <span class="math-display">f(x) = x</span>?' },
+                    options: [
+                        { ar: '<span class="math-display">1</span>', en: '<span class="math-display">1</span>' },
+                        { ar: '<span class="math-display">x</span>', en: '<span class="math-display">x</span>' },
+                        { ar: '<span class="math-display">0</span>', en: '<span class="math-display">0</span>' },
+                        { ar: '<span class="math-display">2</span>', en: '<span class="math-display">2</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f\'(x) = 1 (ميل الخط y = x هو 1)', en: 'f\'(x) = 1 (slope of line y = x is 1)' }
+                },
+                {
+                    q: { ar: 'إذا كان <span class="math-display">f(x) = x</span>، فما <span class="math-display">f\'(x)</span>؟', en: 'If <span class="math-display">f(x) = x⁴</span>, what is <span class="math-display">f\'(x)</span>?' },
+                    options: [
+                        { ar: '<span class="math-display">4x³</span>', en: '<span class="math-display">4x³</span>' },
+                        { ar: '<span class="math-display">x³</span>', en: '<span class="math-display">x³</span>' },
+                        { ar: '<span class="math-display">4x⁴</span>', en: '<span class="math-display">4x⁴</span>' },
+                        { ar: '<span class="math-display">x⁵</span>', en: '<span class="math-display">x</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f\'(x) = 4x³ (قاعدة القوة: nxⁿ⁻¹)', en: 'f\'(x) = 4x³ (power rule: nxⁿ⁻¹)' }
+                }
+            ]
+        }
+    ]
+};
+
+function shuffleArray(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(rng() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+let examData;
+let correctAnswersMap = {};
+let currentLang = 'ar';
+let timeRemaining = TOTAL_TIME;
+let timerInterval;
+
+function prepareShuffledExam() {
+    rng = mulberry32(currentSeed);
+    examData = JSON.parse(JSON.stringify(originalExamData));
+    correctAnswersMap = {};
+    let globalIdx = 0;
+    examData.sections.forEach((section) => {
+        section.questions = shuffleArray(section.questions);
+        section.questions.forEach((q) => {
+            const optionsWithCorrect = q.options.map((opt, idx) => ({ option: opt, isCorrect: idx === q.correct }));
+            const shuffledOptions = shuffleArray(optionsWithCorrect);
+            q.options = shuffledOptions.map(o => o.option);
+            q.correct = shuffledOptions.findIndex(o => o.isCorrect);
+            correctAnswersMap[globalIdx] = String.fromCharCode(97 + q.correct);
+            globalIdx++;
+        });
+    });
+}
+
+function reshuffleExam() {
+    const msg = currentLang === 'ar' ? '🔄 سيتم إنشاء أسئلة جديدة ومسح إجاباتك الحالية. هل أنت متأكد؟' : '🔄 New questions will be generated and current answers cleared. Are you sure?';
+    if (confirm(msg)) {
+        currentSeed = Date.now(); timeRemaining = TOTAL_TIME; answersVisible = false;
+        prepareShuffledExam(); renderExam(); saveState();
+        alert(currentLang === 'ar' ? ' تم تغيير الأسئلة! حظاً موفقاً! ' : '🎲 Questions changed! Good luck! 🍀');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+function setLanguage(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    document.body.classList.toggle('en-mode', lang === 'en');
+    document.querySelectorAll('[data-ar][data-en]').forEach(el => {
+        el.innerHTML = lang === 'ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+    });
+    renderExam(); saveState(false);
+}
+
+function renderExam() {
+    const container = document.getElementById('exam-content');
+    const labels = { ar: { option: ['أ', 'ب', 'ج', 'د'], answer: '✅ الإجابة:' }, en: { option: ['A', 'B', 'C', 'D'], answer: '✅ Answer:' } };
+    const lbl = labels[currentLang]; const isRTL = currentLang === 'ar';
+    let html = ''; let globalIdx = 0;
+    examData.sections.forEach((section, secIdx) => {
+        const badgeClass = ['module-1', 'module-2', 'module-3', 'module-4', 'module-5'][secIdx];
+        html += `<section class="bg-white p-6 rounded-2xl shadow-lg border-2 border-red-100">
+            <div class="text-center mb-4"><span class="module-badge ${badgeClass}">${section.title[currentLang]}</span></div>
+            <ol class="space-y-4 text-sm">`;
+        section.questions.forEach((q) => {
+            const bs = isRTL ? 'border-r-4 pr-4' : 'border-l-4 pl-4';
+            html += `<li class="${bs} border-red-400 py-2" id="q-${globalIdx}">
+                <strong class="text-red-700">${globalIdx + 1}.</strong> <span class="arabic-math">${q.q[currentLang]}</span><br>`;
+            if (q.svg) html += `<div class="graph-container">${q.svg}</div>`;
+            q.options.forEach((opt, oIdx) => {
+                const rs = isRTL ? 'mr-4 ml-2' : 'ml-4 mr-2';
+                html += `<label class="cursor-pointer block mt-2 ${isRTL ? 'mr-4' : 'ml-4'} hover:bg-red-50 rounded-lg p-2 transition">
+                    <input type="radio" name="q${globalIdx}" value="${String.fromCharCode(97 + oIdx)}" class="${rs}">
+                    <span class="arabic-math">${lbl.option[oIdx]}) ${opt[currentLang]}</span>
+                </label>`;
+            });
+            html += `<div class="answer-box text-green-700 mt-3 font-medium ${answersVisible ? '' : 'hidden'} bg-green-50 rounded-lg p-3 border border-green-200">
+                ${lbl.answer} ${lbl.option[q.correct]}) <span class="arabic-math">${q.options[q.correct][currentLang]}</span><br>
+                <span class="text-sm text-green-700 mt-2 block arabic-math">${q.answer[currentLang]}</span>
+            </div></li>`;
+            globalIdx++;
+        });
+        html += `</ol></section>`;
+    });
+    container.innerHTML = html;
+}
+
+function startTimer() {
+    updateTimerDisplay();
+    timerInterval = setInterval(() => {
+        timeRemaining--; updateTimerDisplay();
+        if (timeRemaining % 60 === 0) saveState(false);
+        if (timeRemaining <= 600) document.getElementById('timer').classList.add('timer-warning');
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            alert(currentLang === 'ar' ? "⏰ انتهى الوقت!" : " Time's up!");
+            gradeExam();
+        }
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const m = Math.floor(timeRemaining / 60); const s = timeRemaining % 60;
+    document.getElementById('timer').textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+}
+
+function toggleAnswers() {
+    answersVisible = !answersVisible;
+    document.querySelectorAll('.answer-box').forEach(el => el.classList.toggle('hidden', !answersVisible));
+    saveState(false);
+}
+
+function gradeExam() {
+    let correctCount = 0;
+    const sectionScores = new Array(TOTAL_SECTIONS).fill(0);
+    for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+        const sel = document.querySelector(`input[name="q${i}"]:checked`);
+        const li = document.getElementById(`q-${i}`);
+        if (li) {
+            const isCorrect = sel && sel.value === correctAnswersMap[i];
+            if (isCorrect) { correctCount++; li.classList.add('correct'); li.classList.remove('incorrect'); sectionScores[Math.floor(i / QUESTIONS_PER_SECTION)]++; }
+            else { li.classList.add('incorrect'); li.classList.remove('correct'); }
+        }
+    }
+    const score = Math.round((correctCount / TOTAL_QUESTIONS) * 100);
+    document.getElementById('res-total').textContent = `${score} / 100`;
+    document.getElementById('res-name').textContent = document.getElementById('studentName').value || (currentLang === 'ar' ? 'بطل' : 'Champion');
+    document.getElementById('res-date').textContent = new Date().toLocaleDateString(currentLang === 'ar' ? 'ar-AE' : 'en-US');
+    const pc = document.getElementById('sections-performance'); pc.innerHTML = '';
+    examData.sections.forEach((s, idx) => {
+        pc.innerHTML += `<div class="flex justify-between items-center p-3 bg-white rounded-lg"><span class="text-gray-700">${s.title[currentLang]}</span><span class="font-bold text-red-700">${sectionScores[idx]}/${QUESTIONS_PER_SECTION}</span></div>`;
+    });
+    const badge = document.getElementById('success-badge');
+    document.getElementById('success-percent').textContent = `${score}%`;
+    if (currentLang === 'ar') {
+        if (score >= 90) { badge.textContent = '🌟 ممتاز جداً!'; badge.className = 'success-badge grade-excellent'; }
+        else if (score >= 75) { badge.textContent = '👏 ممتاز!'; badge.className = 'success-badge grade-good'; }
+        else if (score >= 50) { badge.textContent = '👍 جيد'; badge.className = 'success-badge grade-pass'; }
+        else { badge.textContent = ' حاول مرة أخرى'; badge.className = 'success-badge grade-fail'; }
+    } else {
+        if (score >= 90) { badge.textContent = '🌟 Outstanding!'; badge.className = 'success-badge grade-excellent'; }
+        else if (score >= 75) { badge.textContent = '👏 Excellent!'; badge.className = 'success-badge grade-good'; }
+        else if (score >= 50) { badge.textContent = '👍 Good'; badge.className = 'success-badge grade-pass'; }
+        else { badge.textContent = '💪 Try Again'; badge.className = 'success-badge grade-fail'; }
+    }
+    document.getElementById('results-panel').classList.remove('hidden');
+    document.getElementById('results-panel').scrollIntoView({ behavior: 'smooth' });
+    if (timerInterval) clearInterval(timerInterval);
+}
+
+function sendResultsToEmail() {
+    const btn = document.getElementById('sendEmailBtn');
+    const status = document.getElementById('emailStatus');
+    btn.disabled = true;
+    btn.textContent = currentLang === 'ar' ? ' جاري الإرسال...' : '⏳ Sending...';
+    const name = document.getElementById('studentName').value || 'N/A';
+    const studentClass = document.getElementById('studentClass').value || 'N/A';
+    const date = document.getElementById('examDate').value || new Date().toLocaleDateString();
+    const score = document.getElementById('res-total').textContent;
+    const successRate = document.getElementById('success-percent').textContent;
+    const badge = document.getElementById('success-badge').textContent;
+    let questionsHTML = ''; let globalIdx = 0;
+    examData.sections.forEach((section, sectionIdx) => {
+        questionsHTML += `<tr style="background:linear-gradient(135deg,#dc2626,#b91c1c);color:white;"><td colspan="5" style="padding:12px;font-weight:bold;">📌 ${currentLang==='ar'?'القسم':'Section'} ${sectionIdx+1}: ${section.title[currentLang]}</td></tr>`;
+        section.questions.forEach((q) => {
+            const sel = document.querySelector(`input[name="q${globalIdx}"]:checked`);
+            const sv = sel ? sel.value : null; const cv = correctAnswersMap[globalIdx]; const ic = sv === cv;
+            let sat = currentLang==='ar'?'❌ لم يجب':'❌ No answer'; let sac = '#dc2626';
+            if (sv) { const si = sv.charCodeAt(0)-97; sat = q.options[si][currentLang]; sac = ic?'#059669':'#dc2626'; }
+            const cat = q.options[q.correct][currentLang];
+            const rb = ic?'#f0fdf4':'#fef2f2'; const bl = ic?'4px solid #10b981':'4px solid #ef4444';
+            questionsHTML += `<tr style="background:${rb};border-right:${bl};"><td style="padding:10px;border:1px solid #e5e7eb;text-align:center;font-weight:bold;">${globalIdx+1}</td><td style="padding:10px;border:1px solid #e5e7eb;"><strong style="color:#b91c1c;">${currentLang==='ar'?'❓ السؤال:':'❓ Question:'}</strong><br><span style="font-size:13px;">${q.q[currentLang]}</span></td><td style="padding:10px;border:1px solid #e5e7eb;"><strong style="color:${sac};">${currentLang==='ar'?'✍️ إجابة الطالب:':'✍️ Student:'}</strong><br><span style="color:${sac};font-size:13px;">${sat}</span></td><td style="padding:10px;border:1px solid #e5e7eb;"><strong style="color:#059669;">${currentLang==='ar'?'✅ الصحيحة:':'✅ Correct:'}</strong><br><span style="color:#059669;font-size:13px;">${cat}</span></td><td style="padding:10px;border:1px solid #e5e7eb;text-align:center;">${ic?'<span style="font-size:24px;">✅</span>':'<span style="font-size:24px;">❌</span>'}</td></tr>`;
+            globalIdx++;
+        });
+    });
+    const answersHTML = `<div style="font-family:'Segoe UI',Tahoma,Arial;direction:${currentLang==='ar'?'rtl':'ltr'};"><div style="background:linear-gradient(135deg,#dc2626,#b91c1c);color:white;padding:20px;border-radius:10px 10px 0 0;text-align:center;"><h2 style="margin:0;">📐 ${currentLang==='ar'?'نتيجة امتحان المشتقة والنهايات':'Derivatives & Limits Exam Result'}</h2><p style="margin:5px 0 0;opacity:0.9;">Grade 12 Advanced - Mathematics</p></div><div style="background:#fef2f2;padding:15px;"><table style="width:100%;border-collapse:collapse;"><tr><td style="padding:8px;font-weight:bold;color:#b91c1c;">${currentLang==='ar'?'😊 الاسم:':'😊 Name:'}</td><td style="padding:8px;">${name}</td><td style="padding:8px;font-weight:bold;color:#b91c1c;">${currentLang==='ar'?'🏫 الشعبة:':'🏫 Class:'}</td><td style="padding:8px;">${studentClass}</td></tr><tr><td style="padding:8px;font-weight:bold;color:#b91c1c;">${currentLang==='ar'?'📅 التاريخ:':' Date:'}</td><td style="padding:8px;">${date}</td><td style="padding:8px;font-weight:bold;color:#b91c1c;">${currentLang==='ar'?' التقدير:':'🏆 Grade:'}</td><td style="padding:8px;">${badge}</td></tr></table></div><div style="background:white;padding:20px;text-align:center;"><div style="display:inline-block;margin:0 15px;"><div style="font-size:32px;font-weight:bold;color:#dc2626;">${score}</div><div style="color:#6b7280;font-size:13px;">${currentLang==='ar'?'الدرجة':'Score'}</div></div><div style="display:inline-block;margin:0 15px;"><div style="font-size:32px;font-weight:bold;color:#059669;">${successRate}%</div><div style="color:#6b7280;font-size:13px;">${currentLang==='ar'?'النسبة':'Rate'}</div></div></div><table style="width:100%;border-collapse:collapse;font-size:13px;"><thead><tr style="background:#dc2626;color:white;"><th style="padding:10px;border:1px solid #b91c1c;">#</th><th style="padding:10px;border:1px solid #b91c1c;">${currentLang==='ar'?'السؤال':'Question'}</th><th style="padding:10px;border:1px solid #b91c1c;">${currentLang==='ar'?'إجابة الطالب':'Student'}</th><th style="padding:10px;border:1px solid #b91c1c;">${currentLang==='ar'?'الصحيحة':'Correct'}</th><th style="padding:10px;border:1px solid #b91c1c;">${currentLang==='ar'?'النتيجة':'Result'}</th></tr></thead><tbody>${questionsHTML}</tbody></table><div style="background:linear-gradient(135deg,#fef2f2,#fee2e2);padding:15px;border-radius:0 0 10px 10px;"><p style="margin:0;color:#b91c1c;text-align:center;">📐 <strong>${currentLang==='ar'?'أحسنت يا بطل! استمر في إتقان الرياضيات!':'Great job! Keep mastering Mathematics!'}</strong> 📐</p><p style="margin:5px 0 0;color:#b91c1c;text-align:center;font-size:12px;">${currentLang==='ar'?'تم الإرسال تلقائياً | Mr. Mohammed Hesham':'Auto-sent | Mr. Mohammed Hesham'}</p></div></div>`;
+    emailjs.send(SERVICE_ID, TEMPLATE_ID, { to_email: TARGET_EMAIL, student_name: name, student_class: studentClass, exam_date: date, total_score: score, success_rate: successRate, grade: badge, answers_table: answersHTML }).then(() => {
+        status.textContent = currentLang==='ar'?'✅ تم الإرسال بنجاح!':'✅ Sent successfully!'; status.style.color = '#059669'; btn.textContent = currentLang==='ar'?'✓ تم':'✓ Sent';
+    }).catch(err => {
+        status.textContent = currentLang==='ar'?'❌ حدث خطأ':'❌ Error'; status.style.color = '#dc2626'; btn.disabled = false; btn.textContent = currentLang==='ar'?'📧 حاول مرة أخرى':'📧 Try Again'; console.error(err);
+    });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    const saved = loadState();
+    if (saved && saved.seed) {
+        currentSeed = saved.seed; currentLang = saved.lang || 'ar';
+        timeRemaining = saved.timeRemaining !== undefined ? saved.timeRemaining : TOTAL_TIME;
+        answersVisible = saved.answersVisible || false;
+        document.documentElement.lang = currentLang;
+        document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+        document.getElementById('btn-ar').classList.toggle('active', currentLang === 'ar');
+        document.getElementById('btn-en').classList.toggle('active', currentLang === 'en');
+        document.body.classList.toggle('en-mode', currentLang === 'en');
+        document.querySelectorAll('[data-ar][data-en]').forEach(el => { el.innerHTML = currentLang === 'ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en'); });
+    } else { currentSeed = Date.now(); }
+    prepareShuffledExam(); renderExam();
+    if (saved) {
+        if (saved.studentName) document.getElementById('studentName').value = saved.studentName;
+        if (saved.studentClass) document.getElementById('studentClass').value = saved.studentClass;
+        if (saved.examDate) document.getElementById('examDate').value = saved.examDate;
+        if (saved.answers) restoreAnswers(saved.answers);
+    }
+    setupAnswerListeners(); setupInputListeners(); startTimer();
+});
+window.addEventListener('beforeunload', () => saveState(false));
+</script>
+</body>
+</html>
